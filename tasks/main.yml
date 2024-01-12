@@ -58,28 +58,28 @@
     loop_var: osname
 
 # Manage packages [[[1
-- name: Update repositories
-  ansible.builtin.package:
-    update_cache: true
-  when: (nft_enabled|bool and nft_update_repositories|bool and ansible_os_family not in [ 'Gentoo' ])
-  changed_when: false
+#- name: Update repositories
+#  ansible.builtin.package:
+#    update_cache: true
+#  when: (nft_enabled|bool and nft_update_repositories|bool and ansible_os_family not in [ 'Gentoo' ])
+#  changed_when: false
 
-- name: Ensure Nftables packages are in their desired state
-  ansible.builtin.package:
-    name: '{{ nft_pkg_list | list }}'
-    state: '{{ nft_pkg_state }}'
-  register: pkg_install_result
-  until: pkg_install_result is success
-  when: nft_enabled|bool
+#- name: Ensure Nftables packages are in their desired state
+#  ansible.builtin.package:
+#    name: '{{ nft_pkg_list | list }}'
+#    state: '{{ nft_pkg_state }}'
+#  register: pkg_install_result
+#  until: pkg_install_result is success
+#  when: nft_enabled|bool
 
-- name: Ensure old Iptables packages are in their desired state
-  ansible.builtin.package:
-    name: '{{ nft_old_pkg_list | list }}'
-    state: '{{ nft_old_pkg_state }}'
-  register: pkg_remove_result
-  until: pkg_remove_result is success
-  when: (nft_enabled|bool and
-         nft_old_pkg_manage|bool)
+#- name: Ensure old Iptables packages are in their desired state
+#  ansible.builtin.package:
+#    name: '{{ nft_old_pkg_list | list }}'
+#    state: '{{ nft_old_pkg_state }}'
+#  register: pkg_remove_result
+#  until: pkg_remove_result is success
+#  when: (nft_enabled|bool and
+#         nft_old_pkg_manage|bool)
 
 # Common configuration [[[1
 - name: Ensure the nftables config directory
@@ -234,29 +234,29 @@
   notify: ['Restart nftables service']
 
 # Manage custom fail2ban service [[[1
-- name: Create Fail2Ban custom directory for systemd service
-  ansible.builtin.file:
-    path: "{{ nft__fail2ban_service_unit_path | dirname }}"
-    state: directory
-    mode: '0755'
-  when:
-    - nft_enabled|bool
-    - nft_fail2ban_service_override|bool
-    - nft_service_manage|bool
+#- name: Create Fail2Ban custom directory for systemd service
+#  ansible.builtin.file:
+#    path: "{{ nft__fail2ban_service_unit_path | dirname }}"
+#    state: directory
+#    mode: '0755'
+#  when:
+#    - nft_enabled|bool
+#    - nft_fail2ban_service_override|bool
+#    - nft_service_manage|bool
 
-- name: Install Debian Fail2Ban custom service
-  ansible.builtin.template:
-    src: '{{ nft__fail2ban_service_unit_content }}'
-    dest: '{{ nft__fail2ban_service_unit_path }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  register: nftables__register_fail2ban_service
-  when:
-    - nft_enabled|bool
-    - nft_fail2ban_service_override|bool
-    - nft_service_manage|bool
-  notify: ['Restart nftables service']
+#- name: Install Debian Fail2Ban custom service
+#  ansible.builtin.template:
+#    src: '{{ nft__fail2ban_service_unit_content }}'
+#    dest: '{{ nft__fail2ban_service_unit_path }}'
+#    owner: 'root'
+#    group: 'root'
+#    mode: '0644'
+#  register: nftables__register_fail2ban_service
+#  when:
+#    - nft_enabled|bool
+#    - nft_fail2ban_service_override|bool
+#    - nft_service_manage|bool
+#  notify: ['Restart nftables service']
 
 # Manage nftables service [[[1
 - name: Manage nftables service
